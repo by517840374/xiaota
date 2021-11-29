@@ -255,7 +255,7 @@ class HotwordDetector(object):
         """
         Save the message stored in self.recordedData to a timestamped file.
         """
-        filename = '../temp/output' + str(int(time.time())) + '.wav'
+        filename = 'temp/output' + str(int(time.time())) + '.wav'
         data = b''.join(self.recordedData)
 
         #use wave to save data

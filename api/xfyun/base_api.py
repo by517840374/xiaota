@@ -11,12 +11,13 @@ from wsgiref.handlers import format_date_time
 from datetime import datetime
 from time import mktime
 import configparser
+from constant import BASE_CONF
 
 
 class RoleBase(object):
     def __init__(self):
         cf = configparser.ConfigParser()
-        cf.read("config.conf", encoding="utf-8")
+        cf.read(BASE_CONF, encoding="utf-8")
         self.APPID = cf.get("xfyun", "app_id")
         self.APIKey = cf.get("xfyun", "api_key")
         self.APISecret = cf.get("xfyun", "api_secret")

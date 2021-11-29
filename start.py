@@ -12,6 +12,7 @@ from api.xfyun.asr_api import distinguish
 from api.xfyun.tts_api import synthesize
 from ctypes import *
 from contextlib import contextmanager
+from constant import TEMP_PATH
 
 
 """
@@ -71,7 +72,7 @@ def play_audio_file(fname):
 
 def audioRecorderCallback(fname):
     print("converting audio to text")
-    outfile = "temp/outfile.wav"
+    outfile = TEMP_PATH + "/outfile.wav"
     asr_msg = distinguish(fname)
     tts_msg_lst = get_robot_msg(asr_msg)
     tts_msg = random.choice(tts_msg_lst)
@@ -84,6 +85,7 @@ def audioRecorderCallback(fname):
 def detectedCallback():
   print('recording audio...', end='', flush=True)
 
+
 def signal_handler(signal, frame):
     global interrupted
     interrupted = True
@@ -92,6 +94,7 @@ def signal_handler(signal, frame):
 def interrupt_callback():
     global interrupted
     return interrupted
+
 
 if len(sys.argv) == 1:
     print("Error: need to specify model name")

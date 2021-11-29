@@ -1,6 +1,7 @@
 # encoding:utf-8
 import requests
 import configparser
+from constant import BASE_CONF
 
 access_token = ""
 
@@ -62,7 +63,7 @@ def get_access_token():
     global access_token
     access_token = ""
     cf = configparser.ConfigParser()
-    cf.read("../../config.conf", encoding="utf-8")
+    cf.read(BASE_CONF, encoding="utf-8")
     client_id = cf.get("baidu", "app_key")
     client_secret = cf.get("baidu", "app_secret")
     host = 'https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=%s&client_secret=%s' % (client_id, client_secret)
