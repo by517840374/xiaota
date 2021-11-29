@@ -20,7 +20,7 @@ from api.xfyun.base_api import RoleBase
 STATUS_FIRST_FRAME = 0  # 第一帧的标识
 STATUS_CONTINUE_FRAME = 1  # 中间帧标识
 STATUS_LAST_FRAME = 2  # 最后一帧的标识
-MSG = ""
+MSG = []
 asr = ""
 
 
@@ -44,10 +44,11 @@ def on_message(ws, message):
             data = json.loads(message)["data"]["result"]["ws"]
             # print(json.loads(message))
             global MSG
-            MSG = ""
+            _msg = ""
             for i in data:
                 for w in i["cw"]:
-                    MSG += w["w"]
+                    _msg += w["w"]
+            MSG.append(_msg)
     except Exception as e:
         print("receive msg,but parse exception:", e)
 

@@ -74,7 +74,7 @@ def audioRecorderCallback(fname):
     print("converting audio to text")
     outfile = TEMP_PATH + "/outfile.wav"
     asr_msg = distinguish(fname)
-    tts_msg_lst = get_robot_msg(asr_msg)
+    tts_msg_lst = get_robot_msg(asr_msg[0])
     tts_msg = random.choice(tts_msg_lst)
     synthesize(tts_msg, fname, outfile)
     play_audio_file(outfile)
