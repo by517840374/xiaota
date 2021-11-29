@@ -1,9 +1,9 @@
 # encoding:utf-8
 import requests
 import configparser
-from constant import BASE_CONF
-
-access_token = ""
+import datetime
+from constant import BASE_CONF, TEMP_PATH
+from dateutil import parser as dparser
 
 # access_token 返回结果
 """
@@ -60,27 +60,36 @@ k = {'result':
 
 def get_access_token():
     # client_id 为官网获取的AK， client_secret 为官网获取的SK
-    global access_token
+    cache = open(TEMP_PATH + "/unit_api.ini", "a+")
+    try:
+        pms = cache.readlines()
+        if len(pms) > 0:
+            time = pms[0].strip()
+            tk = pms[1].strip()
+            # 计算token是否过期 官方说明一个月，这里保守29天
+            time = dparser.parse(time)
+            endtime = datetime.datetime.now()
+            if (endtime - time).days <= 29:
+                return tk
+    finally:
+        cache.close()
     access_token = ""
     cf = configparser.ConfigParser()
     cf.read(BASE_CONF, encoding="utf-8")
     client_id = cf.get("baidu", "app_key")
     client_secret = cf.get("baidu", "app_secret")
     host = 'https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=%s&client_secret=%s' % (client_id, client_secret)
-    response = requests.get(host)
-    if response:
-        res_data = response.json()
-        access_token = res_data["access_token"]
-    return access_token
+    try:
+        response = requests.get(host)
+        if response:
+            res_data = response.json()
+            access_token = res_data["access_token"]
+    except Exception:
+        return access_token
 
 
-def get_robot_msg(message, audio_path=None):
-    # global access_token
-    # if not access_token:
-    #     access_token = get_access_token()
-    #     if not access_token:
-    #         return
-    access_token = '24.8316940270ef25b030c05a19214b7164.2592000.1640654145.282335-25244773'
+def get_robot_msg(message):
+    access_token = get_access_token()
     robot_msg = []
     url = 'https://aip.baidubce.com/rpc/2.0/unit/service/v3/chat?access_token=' + access_token
     msg = message.encode("utf-8").decode("latin1")
